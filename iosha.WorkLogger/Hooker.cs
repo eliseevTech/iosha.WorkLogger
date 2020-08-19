@@ -39,11 +39,11 @@ namespace iosha.WorkLogger
         public event EventHandler KeyboardWasPressedEvent;
 
 
-        private void LowLevelKeyboardHookProc(
+        private IntPtr LowLevelKeyboardHookProc(
             int nCode, IntPtr wParam, IntPtr lParam)
         {
-             KeyboardWasPressedEvent?.Invoke(this, null);
-            //return CallNextHookEx(_hHook, nCode, wParam, lParam);
+            KeyboardWasPressedEvent?.Invoke(this, null);
+            return CallNextHookEx(_hHook, nCode, wParam, lParam);
             //какой-то код который перехватывает ALT TAB https://www.cyberforum.ru/csharp-beginners/thread1327419.html
             //if (nCode < 0)
             //{
@@ -81,7 +81,7 @@ namespace iosha.WorkLogger
             public readonly IntPtr ExtraInfo;
 
         }
-        private delegate void LowLevelKeyboardProcDelegate(
+        private delegate IntPtr LowLevelKeyboardProcDelegate(
             int nCode, IntPtr wParam, IntPtr lParam);
     
 
