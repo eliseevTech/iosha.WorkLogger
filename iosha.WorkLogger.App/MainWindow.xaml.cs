@@ -26,13 +26,33 @@ namespace iosha.WorkLogger.App
         {
             InitializeComponent();
             _timeCalculator = new TimeCalculator();
-             
+
+            this.Hide();
+
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new System.Drawing.Icon("C:\\WorkLogger.ico");
+            ni.Visible = true;
+            ni.DoubleClick +=
+       delegate (object sender, EventArgs args)
+       {
+           this.Show();
+           this.WindowState = WindowState.Normal;
+       };
+
         }
 
         private void Calculate(object sender, RoutedEventArgs e)
         {
             _timeCalculator.Stop();
             timeTextBlock.Text = _timeCalculator.WorkTimeMinute.ToString() + " минут";
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+                this.Hide();
+
+            base.OnStateChanged(e);
         }
     }
 }
