@@ -94,5 +94,10 @@ namespace iosha.WorkLogger.App
         {            
             CloudUrl.Text = _cloudSender.Send(_workTimer.WorkLog);
         }
+
+        private void OnClose(object sender, EventArgs e)
+        {
+            _workTimer.Stop();
+        }
     }
 }

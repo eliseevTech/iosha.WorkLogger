@@ -12,7 +12,7 @@ namespace iosha.WorkLogger
 {
     public class WorkTimer
     {
-        private const int AFK_MAX_TIME_MINUTE = 5;
+        private const int AFK_MAX_TIME_MINUTE = 1;
 
         private Hooker _hooker;
 
@@ -42,7 +42,7 @@ namespace iosha.WorkLogger
             _workTimer = new Stopwatch();
 
             _afkTimer = new Timer();
-            _afkTimer.Interval = AFK_MAX_TIME_MINUTE * 60000;
+            _afkTimer.Interval = AFK_MAX_TIME_MINUTE * 10000;
             _afkTimer.Elapsed += AfkDetected;
 
             _hooker.KeyboardWasPressedEvent += Act;
@@ -65,35 +65,45 @@ namespace iosha.WorkLogger
 
         private void Act(object sender, EventArgs args)
         {
-            if (_isInWork)
+            if (!_isInWork)
             {
                 StartWork();
                 return;
             }
-             _workLogManager.SaveLog(new WorkLog()
+            SaveLog();
+
+            _afkTimer.Stop();
+            _afkTimer.Start();
+        }
+
+        private void SaveLog()
+        {
+            _workLogManager.SaveLog(new WorkLog()
             {
                 Id = 1,
                 Day = DateTime.Now,
                 PCRunTimeMillisecond = 0,
                 WorkTimeMillisecond = TotalWorkTimeMilliseconds
             });
-
-            _afkTimer.Stop();
-            _afkTimer.Start();
         }
-
-        
 
         private void StopWork()
         {
             _isInWork = false;
             _afkTimer.Stop();
             _baseWorkTimeMilliseconds += _workTimer.ElapsedMilliseconds;
+            SaveLog();
+            _workTimer.Reset();
             _workTimer.Stop();
         }
 
-
         public WorkLog WorkLog => _workLogManager.GetLogs(new GetLogsRequest()); 
+
+        public void Stop()
+        {
+            StopWork();
+          
+        }
 
     }
 }
