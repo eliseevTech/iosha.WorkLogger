@@ -43,7 +43,7 @@ namespace iosha.WorkLogger.App
 
         private void Calculate(object sender, RoutedEventArgs e)
         {
-            _timeCalculator.Stop();
+            _timeCalculator.RefreshTime();
             timeTextBlock.Text = _timeCalculator.WorkTimeMinute.ToString() + " минут";
         }
 
@@ -54,5 +54,7 @@ namespace iosha.WorkLogger.App
 
             base.OnStateChanged(e);
         }
+
+
     }
 }

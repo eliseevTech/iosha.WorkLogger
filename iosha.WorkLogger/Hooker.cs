@@ -14,7 +14,7 @@ namespace iosha.WorkLogger
             SetHook();
         }
 
-        private const int WH_KEYBOARD_LL = 13;
+        private const int WH_KEYBOARD_LL = 13;        
         private LowLevelKeyboardProcDelegate _callback;
         private IntPtr _hHook;
 

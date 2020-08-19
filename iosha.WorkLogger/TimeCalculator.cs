@@ -11,6 +11,8 @@ namespace iosha.WorkLogger
     {
         private const int AFK_MAX_TIME_MINUTE = 5;
 
+        private Hooker _hooker;
+
         private DateTime _startTimeKeyPressed;
         private DateTime _lastTimeKeyPressed;
 
@@ -27,8 +29,8 @@ namespace iosha.WorkLogger
 
         public void StartWork()
         {
-            Hooker hooker = new Hooker();
-            hooker.KeyboardWasPressedEvent += WasPressed;
+            _hooker = new Hooker();
+            _hooker.KeyboardWasPressedEvent += WasPressed;
         }
 
         private void WasPressed(object sender, EventArgs args)
@@ -56,7 +58,7 @@ namespace iosha.WorkLogger
             }
         }
 
-        public void Stop()
+        public void RefreshTime()
         {
             var pressedTime = DateTime.Now;
             _workTimeMinute += _lastTimeKeyPressed.Subtract(_startTimeKeyPressed).Minutes;
@@ -65,5 +67,9 @@ namespace iosha.WorkLogger
         }
 
 
+        public void StopTimer()
+        {
+            _hooker.Unhook();
+        }
     }
 }
